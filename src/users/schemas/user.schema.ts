@@ -1,6 +1,7 @@
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
-import {Document} from "mongoose";
+import mongoose, {Document} from "mongoose";
 import {ApiProperty} from "@nestjs/swagger";
+import {Role} from "../../roles/schemas/role.schema";
 
 export type UserDocument = User & Document
 
@@ -23,6 +24,10 @@ export class User {
     @Prop()
     banReason: string
 
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Role'})
+    roles: Role[]
+
+    _id: string
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
