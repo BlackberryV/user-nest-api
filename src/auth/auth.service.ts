@@ -19,8 +19,6 @@ export class AuthService {
         return this.generateToken(user)
     }
 
-
-
     async registration(userDto: CreateUserDto) {
         const candidate = await this.usersService.getUserByEmail(userDto.email)
         if (candidate) {

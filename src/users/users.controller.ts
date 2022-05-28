@@ -6,6 +6,8 @@ import {User} from "./schemas/user.schema";
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 import {Roles} from "../auth/roles-auth.decorator";
 import {RolesGuard} from "../auth/roles.guard";
+import {AddRoleDto} from "./dto/add-role.dto";
+import {BanUserDto} from "./dto/ban-user.dto";
 
 @ApiTags('Users')
 @Controller('users')
@@ -22,15 +24,35 @@ export class UsersController {
 
     @ApiOperation({summary: 'Get all users'})
     @ApiResponse({status: 200, type: [User]})
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
+    @Roles('ADMIN')
+    @UseGuards(RolesGuard)
     @Get()
     getAll(): Promise<User[]> {
         return this.usersService.getAll()
     }
 
+    @ApiOperation({summary: 'Give role'})
+    @ApiResponse({status: 200, type: [User]})
+    @Roles('ADMIN')
+    @UseGuards(RolesGuard)
+    @Post('role')
+    addRole(@Body() dto: AddRoleDto): Promise<AddRoleDto> {
+        return this.usersService.addRole(dto)
+    }
+
+    @ApiOperation({summary: 'Ban user'})
+    @ApiResponse({status: 200, type: [User]})
+    @Roles('ADMIN')
+    @UseGuards(RolesGuard)
+    @Post('ban')
+    ban(@Body() dto: BanUserDto): Promise<BanUserDto> {
+        return this.usersService.ban(dto)
+    }
+
     @ApiOperation({summary: 'Get one user by id'})
     @ApiResponse({status: 200, type: User})
-    @Roles('USER')
+    @Roles('ADMIN')
     @UseGuards(RolesGuard)
     @Get(':id')
     getOne(@Param('id') id): Promise<User> {
